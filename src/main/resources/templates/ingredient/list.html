@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ingredient List</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<h1>Ingredient List</h1>
+
+<form method="get" th:action="@{/ingredients}">
+    <input type="text" name="keyword" placeholder="Search..." th:value="${keyword}" />
+    <select name="categoryId">
+        <option value="">All Categories</option>
+        <option th:each="cat : ${categories}" th:value="${cat.categoryId}" th:text="${cat.name}" th:selected="${cat.categoryId} == ${categoryId}"></option>
+    </select>
+    <button type="submit">Search</button>
+</form>
+
+<a th:href="@{/ingredients/create}">Add New Ingredient</a>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th><a th:href="@{|/ingredients?page=0&sort=name&dir=${sort == 'name' && dir == 'asc' ? 'desc' : 'asc'}|}">Name</a></th>
+        <th>Description</th>
+        <th>Image</th>
+        <th><a th:href="@{|/ingredients?page=0&sort=price&dir=${sort == 'price' && dir == 'asc' ? 'desc' : 'asc'}|}">Price</a></th>
+        <th>Quantity</th>
+        <th>Category</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ingredient : ${ingredientPage.content}">
+        <td th:text="${ingredient.name}"></td>
+        <td th:text="${ingredient.description}"></td>
+        <td><img th:src="${ingredient.image}" alt="Image" width="50"/></td>
+        <td th:text="${ingredient.price}"></td>
+        <td th:text="${ingredient.quantity}"></td>
+        <td th:text="${ingredient.category != null ? ingredient.category.name : ''}"></td>
+        <td>
+            <a th:href="@{'/ingredients/edit/' + ${ingredient.ingredientId}}">Edit</a> |
+            <a th:href="@{'/ingredients/delete/' + ${ingredient.ingredientId}}" onclick="return confirm('Are you sure?')">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div>
+    <span th:text="'Page ' + ${ingredientPage.number + 1} + ' of ' + ${ingredientPage.totalPages}"></span>
+    <div>
+        <a th:if="${ingredientPage.hasPrevious()}" th:href="@{|/ingredients?page=${ingredientPage.number - 1}|}">Previous</a>
+        <a th:if="${ingredientPage.hasNext()}" th:href="@{|/ingredients?page=${ingredientPage.number + 1}|}">Next</a>
+    </div>
+</div>
+
+</body>
+</html> 
