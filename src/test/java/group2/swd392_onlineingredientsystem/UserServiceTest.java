@@ -47,7 +47,7 @@ public class UserServiceTest {
     @Test
     public void testRegisterWithExistingUsername() {
         User user = new User();
-        user.setUsername("baker_khanh"); // đã có sẵn trong DB
+        user.setUsername("baker_khanh");
         user.setPassword("anypass");
         user.setEmail("another_email@example.com");
 

@@ -30,8 +30,9 @@ public class User {
     @Column(name = "email", nullable = false, length = 100, unique = true)
     private String email;
 
-    @Column(name = "phoneNumber", length = 20)
+    @Column(name = "phoneNumber")
     private String phoneNumber;
+
 
 
 
