@@ -30,8 +30,11 @@ public class User {
     @Column(name = "email", nullable = false, length = 100, unique = true)
     private String email;
 
-    @Column(name = "phone_number", length = 20)
+    @Column(name = "phoneNumber", length = 20)
     private String phoneNumber;
+
+
+
 
     @ManyToOne
     @JoinColumn(name = "roleid")
