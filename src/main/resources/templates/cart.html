@@ -126,7 +126,7 @@
             <label>
                 Chọn nguyên liệu:
                 <select name="ingredientId" required>
-                    <option value="" disabled selected>-- Chọn nguyên liệu --</option>
+                    <option value="" disabled selected>-- Choose ingre --</option>
                     <option th:each="ingredient : ${ingredients}"
                             th:value="${ingredient.ingredientId}"
                             th:text="${ingredient.name + ' - ₫' + ingredient.price}">
