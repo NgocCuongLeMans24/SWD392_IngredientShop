@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Giỏ hàng</title>
+    <style>
+        .cart-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .cart-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .cart-table th, .cart-table td {
+            padding: 16px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .cart-table th {
+            background-color: #f8f8f8;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .cart-table td img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-update {
+            background-color: #17a2b8;
+            color: #fff;
+        }
+
+        .btn-remove {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .btn-add {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .cart-summary {
+            margin-top: 20px;
+            text-align: right;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        /* Thêm phần CSS cho khu vực thêm sản phẩm */
+        .add-to-cart-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            background-color: #f9f9f9;
+        }
+
+        .add-to-cart-section h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #34495e;
+            margin-bottom: 20px;
+        }
+
+        .add-form {
+            display: flex;
+            align-items: flex-end;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .add-form label {
+            display: flex;
+            flex-direction: column;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .add-form select,
+        .add-form input[type="number"] {
+            padding: 8px 12px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            width: 220px;
+        }
+    </style>
+</head>
+<body>
+<div class="cart-container">
+    <!-- Phần thêm -->
+    <div class="add-to-cart-section">
+        <h3>Thêm sản phẩm vào giỏ</h3>
+        <form th:action="@{/cart/add}" method="post" class="add-form">
+            <label>
+                Chọn nguyên liệu:
+                <select name="ingredientId" required>
+                    <option value="" disabled selected>-- Choose ingre --</option>
+                    <option th:each="ingredient : ${ingredients}"
+                            th:value="${ingredient.ingredientId}"
+                            th:text="${ingredient.name + ' - ₫' + ingredient.price}">
+                    </option>
+                </select>
+            </label>
+            <label>
+                Số lượng:
+                <input type="number" name="quantity" min="1" value="1" required />
+            </label>
+            <button type="submit" class="btn btn-add">Thêm vào giỏ</button>
+        </form>
+    </div>
+
+    <!-- Phần hiển thị giỏ -->
+    <h1 class="cart-title">Giỏ hàng của bạn</h1>
+    <table class="cart-table">
+        <thead>
+        <tr>
+            <th>Hình ảnh</th>
+            <th>Tên</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Tổng</th>
+            <th>Xóa</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${cartItems}">
+            <td><img th:src="@{'/images/' + ${item.ingredient.image}}" alt=""/></td>
+            <td th:text="${item.ingredient.name}">Tên</td>
+            <td th:text="${item.ingredient.price} + '₫'">0₫</td>
+            <td>
+                <form th:action="@{/cart/update}" method="post">
+                    <input type="hidden" name="ingredientId" th:value="${item.ingredient.ingredientId}" />
+                    <input type="number" name="quantity" min="1" th:value="${item.quantity}" />
+                    <button type="submit" class="btn btn-update">Cập nhật</button>
+                </form>
+            </td>
+            <td th:text="${item.ingredient.price * item.quantity} + '₫'">0₫</td>
+            <td>
+                <form th:action="@{/cart/remove}" method="post">
+                    <input type="hidden" name="ingredientId" th:value="${item.ingredient.ingredientId}" />
+                    <button type="submit" class="btn btn-remove">X</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="cart-summary">
+        Tổng cộng:
+        <span th:text="${totalAmount} + ' ₫'">0₫</span>
+    </div>
+</div>
+</body>
+</html>
