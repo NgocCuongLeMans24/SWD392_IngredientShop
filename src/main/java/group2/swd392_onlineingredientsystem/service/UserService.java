@@ -5,7 +5,10 @@ import java.util.List;
 
 public interface UserService {
     List<User> getAllUsers();
+
     User getUserById(Integer id);
+
     void save(User user);
+
     void delete(Integer id);
 }
