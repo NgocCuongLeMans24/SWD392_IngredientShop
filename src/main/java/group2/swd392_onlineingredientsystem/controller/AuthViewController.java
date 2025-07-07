@@ -3,12 +3,14 @@ package group2.swd392_onlineingredientsystem.controller;
 import group2.swd392_onlineingredientsystem.model.User;
 import group2.swd392_onlineingredientsystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.Optional;
 
 @Controller
 public class AuthViewController {
@@ -16,9 +18,29 @@ public class AuthViewController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     @GetMapping("/login")
     public String showLoginForm() {
-        return "auth/login";
+        return "auth/login"; // HTML login page
+    }
+
+    @PostMapping("/login")
+    public String processLogin(@RequestParam String username,
+                               @RequestParam String password,
+                               RedirectAttributes redirectAttributes) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password)
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            redirectAttributes.addFlashAttribute("message", "✅ Đăng nhập thành công!");
+            return "redirect:/dashboard";
+        } catch (AuthenticationException e) {
+            redirectAttributes.addFlashAttribute("error", "❌ Sai tên đăng nhập hoặc mật khẩu");
+            return "redirect:/login";
+        }
     }
 
     @GetMapping("/register")
@@ -33,24 +55,15 @@ public class AuthViewController {
         try {
             userService.register(user);
             redirectAttributes.addFlashAttribute("message", "✅ Đăng ký thành công!");
-            return "redirect:/login";
+            return "redirect:/register";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "❌ Đăng ký thất bại: " + e.getMessage());
             return "redirect:/register";
         }
     }
-
-    @PostMapping("/login")
-    public String processLogin(@RequestParam String username,
-                               @RequestParam String password,
-                               RedirectAttributes redirectAttributes) {
-        Optional<User> user = userService.login(username, password);
-        if (user.isPresent()) {
-            redirectAttributes.addFlashAttribute("message", "✅ Đăng nhập thành công!");
-            return "redirect:/dashboard"; // hoặc trang chính
-        } else {
-            redirectAttributes.addFlashAttribute("error", "❌ Sai tên đăng nhập hoặc mật khẩu");
-            return "redirect:/login";
-        }
+    @GetMapping("/dashboard")
+    public String showDashboard() {
+        return "dashboard";
     }
+
 }
