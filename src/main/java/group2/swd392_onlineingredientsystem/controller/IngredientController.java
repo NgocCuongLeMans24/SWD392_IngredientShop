@@ -73,8 +73,9 @@ public class IngredientController {
                          RedirectAttributes redirectAttributes) {
         Category category = categoryRepository.findById(categoryId).orElse(null);
         ingredient.setCategory(category);
-        String homeDir = System.getProperty("user.home");
-        String uploadDir = homeDir + "/images/";
+
+        String uploadDir = "src/main/resources/static/images/";
+
         File uploadPath = new File(uploadDir);
         if (!uploadPath.exists()) {
             uploadPath.mkdirs();
