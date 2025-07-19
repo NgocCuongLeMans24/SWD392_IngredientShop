@@ -33,7 +33,8 @@ public class User {
     @Column(name = "phoneNumber")
     private String phoneNumber;
 
-
+    @Column(name = "balance")
+    private double balance;
 
 
 
