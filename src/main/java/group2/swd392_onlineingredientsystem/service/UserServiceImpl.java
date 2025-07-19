@@ -55,6 +55,7 @@ public class UserServiceImpl implements UserService {
         Role role = roleRepo.findById(2).orElseThrow(() -> new Exception("Role not found"));
         user.setRole(role);
         user.setPassword(encoder.encode(user.getPassword()));
+        user.setBalance(100000000);
 
         return userRepo.save(user);
     }
