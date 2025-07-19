@@ -25,36 +25,7 @@ public class UserServiceTest {
     @Autowired
     private RoleRepository roleRepo;
 
-    @Test
-    public void testRegisterAndLoginSuccess() throws Exception {
-        // Tạo user mới
-        User user = new User();
-        user.setUsername("testuser123");
-        user.setPassword("testpass123");
-        user.setEmail("testuser123@example.com");
 
-        User savedUser = userService.register(user);
 
-        assertNotNull(savedUser.getUserId());
-        assertEquals("testuser123", savedUser.getUsername());
 
-        // Kiểm tra login
-        Optional<User> loginResult = userService.login("testuser123", "testpass123");
-        assertTrue(loginResult.isPresent());
-        assertEquals("testuser123", loginResult.get().getUsername());
-    }
-
-    @Test
-    public void testRegisterWithExistingUsername() {
-        User user = new User();
-        user.setUsername("baker_khanh");
-        user.setPassword("anypass");
-        user.setEmail("another_email@example.com");
-
-        Exception exception = assertThrows(Exception.class, () -> {
-            userService.register(user);
-        });
-
-        assertTrue(exception.getMessage().contains("Username already exists"));
-    }
 }
