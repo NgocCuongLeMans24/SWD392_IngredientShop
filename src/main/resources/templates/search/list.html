@@ -165,12 +165,20 @@
 <body>
 <header>
     <h1>Ingredient Shop</h1>
+    <a th:href="@{/cart}" style="position: absolute; top: 20px; right: 20px;">
+        <img th:src="@{/images/cart.png}" alt="Cart" style="width: 36px; height: 36px;" />
+    </a>
 </header>
 <main>
     <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
     <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
-    <h2>Danh sách nguyên liệu</h2>
+    <h2 style="display: flex; justify-content: space-between; align-items: center;">
+        Danh sách nguyên liệu
+        <a th:href="@{/cart}" title="Xem giỏ hàng" style="text-decoration: none;">
+            <img src="/images/cart.png" alt="Cart" style="width: 32px; height: 32px;">
+        </a>
+    </h2>
 
     <form method="get" th:action="@{/search}">
         <input type="hidden" name="sort" th:value="${sortBy}" />
@@ -201,6 +209,7 @@
                     Tên
                 </a>
             </th>
+            <th>Hình ảnh</th>
             <th>Mô tả</th>
             <th th:if="${categoryId != null}">
                 <a th:href="@{|/search?page=0&sort=price&dir=${sort == 'price' and dir == 'asc' ? 'desc' : 'asc'}&keyword=${keyword}&categoryId=${categoryId}|}">
@@ -214,15 +223,32 @@
             </th>
             <th>Số lượng</th>
             <th>Danh mục</th>
+            <th>Thêm vào giỏ</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="ingredient : ${ingredientPage.content}">
             <td th:text="${ingredient.name}"></td>
+            <td th:if="${ingredient.image != null && !ingredient.image.isEmpty()}">
+                <img th:src="@{'/images/' + ${ingredient.image}}" alt="image" />
+            </td>
+            <td th:if="${ingredient.image == null || ingredient.image.isEmpty()}">
+                <img th:src="@{/images/flour.jpg}" alt="image" />
+            </td>
             <td th:text="${ingredient.description}"></td>
             <td th:text="${ingredient.price} + ' VNĐ'"></td>
             <td th:text="${ingredient.quantity}"></td>
             <td th:text="${ingredient.category != null ? ingredient.category.name : 'Không có'}"></td>
+            <td>
+                <form class="add-to-cart-form" th:action="@{/cart/addAjax}" method="post" onsubmit="return confirmAddToCart(this)">
+                    <input type="hidden" name="ingredientId" th:value="${ingredient.ingredientId}" />
+                    <input type="number" name="quantity" value="1" min="1" style="width: 60px;" />
+                    <button type="submit" style="background-color: #ffa500; color: white; border: none; padding: 6px 10px; border-radius: 4px;">
+                        Add to Cart
+                    </button>
+                </form>
+                <div class="add-result"></div>
+            </td>
         </tr>
         </tbody>
     </table>
@@ -257,5 +283,35 @@
 <footer>
     <p>© 2025 Ingredient Shop</p>
 </footer>
+<script>
+    function confirmAddToCart(form) {
+        const quantity = form.querySelector('input[name="quantity"]').value;
+
+        if (!confirm(`Thêm ${quantity} sản phẩm vào giỏ?`)) {
+            return false;
+        }
+
+        const formData = new FormData(form);
+        const actionUrl = form.getAttribute("action");
+
+        fetch(actionUrl, {
+            method: "POST",
+            body: new URLSearchParams(formData)
+        })
+            .then(response => response.text())
+            .then(message => {
+                const resultDiv = form.nextElementSibling; // .add-result div
+                resultDiv.innerText = message;
+                resultDiv.style.color = "green";
+            })
+            .catch(error => {
+                const resultDiv = form.nextElementSibling;
+                resultDiv.innerText = "❌ Error adding to cart";
+                resultDiv.style.color = "red";
+            });
+
+        return false; // Stop normal form submission
+    }
+</script>
 </body>
 </html>

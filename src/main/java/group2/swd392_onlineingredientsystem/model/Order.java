@@ -30,6 +30,6 @@ public class Order {
     @Column(name = "totalamount", precision = 10, scale = 2)
     private BigDecimal totalAmount;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetails;
 } 

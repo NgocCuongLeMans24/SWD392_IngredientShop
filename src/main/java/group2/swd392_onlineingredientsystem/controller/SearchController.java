@@ -29,7 +29,7 @@ public class SearchController {
     public String searchIngredient(@RequestParam(value = "page", defaultValue = "0") int page,
                                    @RequestParam(value = "sort", defaultValue = "name") String sortBy,
                                    @RequestParam(value = "dir", defaultValue = "asc") String direction,
-                                   @RequestParam(value = "keyword") String keyword,
+                                   @RequestParam(value = "keyword", defaultValue = "") String keyword,
                                    @RequestParam(value = "categoryId", required = false) Integer categoryId,
                                    Model model){
         Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();

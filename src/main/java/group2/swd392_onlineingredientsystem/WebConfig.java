@@ -10,6 +10,9 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         String homeDir = System.getProperty("user.home");
         registry.addResourceHandler("/images/**")
-                .addResourceLocations("file:///" + homeDir + "/images/");
+                .addResourceLocations(
+                        "file:///" + homeDir + "/images/",
+                        "classpath:/static/images/"
+                );
     }
 } 
