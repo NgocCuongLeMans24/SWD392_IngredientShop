@@ -74,7 +74,8 @@ public class IngredientController {
         Category category = categoryRepository.findById(categoryId).orElse(null);
         ingredient.setCategory(category);
 
-        String uploadDir = "src/main/resources/static/images/";
+        // Sử dụng thư mục ngoài user home để upload ảnh
+        String uploadDir = System.getProperty("user.home") + "/images/";
 
         File uploadPath = new File(uploadDir);
         if (!uploadPath.exists()) {
@@ -85,11 +86,12 @@ public class IngredientController {
                 String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
                 File dest = new File(uploadDir, fileName);
                 imageFile.transferTo(dest);
-                ingredient.setImage("/images/" + fileName);
+                ingredient.setImage("/images/" + fileName); // Đường dẫn này dùng để show ảnh trên web
             }
             ingredientService.save(ingredient);
             redirectAttributes.addFlashAttribute("success", "Tạo nguyên liệu thành công!");
         } catch (IOException e) {
+            e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "Lỗi khi upload ảnh!");
         }
         return "redirect:/ingredients";
