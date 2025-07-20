@@ -17,6 +17,13 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
+
+                        // Customer role access
+                        .requestMatchers("/cart/**").hasRole("Customer")
+
+                        // Admin role access
+                        .requestMatchers("/admin/**").hasRole("Admin")
+
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf.disable())
@@ -33,6 +40,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 
 
     @Bean

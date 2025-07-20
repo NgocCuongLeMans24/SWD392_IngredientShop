@@ -15,10 +15,13 @@ public class CustomUserDetails implements UserDetails {
         this.user = user;
     }
 
-    // Trả về danh sách quyền của user
+    /**
+     * Trả về danh sách quyền của người dùng dưới dạng ROLE_*
+     * VD: ROLE_ADMIN, ROLE_USER,...
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (user.getRole() != null) {
+        if (user.getRole() != null && user.getRole().getRoleName() != null) {
             return List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().getRoleName()));
         }
         return Collections.emptyList();
@@ -26,7 +29,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getPassword(); // đã được mã hóa
+        return user.getPassword(); // Mật khẩu đã được mã hóa
     }
 
     @Override
@@ -34,13 +37,30 @@ public class CustomUserDetails implements UserDetails {
         return user.getUsername();
     }
 
-    // Các trạng thái tài khoản. Có thể thêm logic nếu cần
-    @Override public boolean isAccountNonExpired() { return true; }
-    @Override public boolean isAccountNonLocked() { return true; }
-    @Override public boolean isCredentialsNonExpired() { return true; }
-    @Override public boolean isEnabled() { return true; }
+    // Các trạng thái tài khoản, có thể thay đổi tùy theo logic hệ thống
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
-    // Nếu bạn muốn lấy lại entity User ở controller
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    /**
+     * Trả về thực thể User để sử dụng trong controller hoặc service
+     */
     public User getUser() {
         return user;
     }

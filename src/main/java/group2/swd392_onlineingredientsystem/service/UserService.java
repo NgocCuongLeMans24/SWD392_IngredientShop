@@ -17,4 +17,5 @@ public interface UserService {
     void delete(Integer id);
     User register(User user) throws Exception;
     Optional<User> login(String username, String rawPassword);
+    Optional<User> findByUsername(String username);
 }

@@ -55,8 +55,8 @@ public class UserServiceImpl implements UserService {
         Role role = roleRepo.findById(2).orElseThrow(() -> new Exception("Role not found"));
         user.setRole(role);
         user.setPassword(encoder.encode(user.getPassword()));
-//        user.setBalance(100000000);
-        user.setMoney(5000000);
+        user.setBalance(100000000);
+//        user.setMoney(5000000);
         return userRepo.save(user);
     }
 
@@ -67,5 +67,10 @@ public class UserServiceImpl implements UserService {
             return user;
         }
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return userRepo.findByUsername(username);
     }
 }
