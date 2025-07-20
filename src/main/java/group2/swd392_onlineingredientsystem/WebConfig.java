@@ -6,13 +6,5 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String homeDir = System.getProperty("user.home");
-        registry.addResourceHandler("/images/**")
-                .addResourceLocations(
-                        "file:///" + homeDir + "/images/",
-                        "classpath:/static/images/"
-                );
-    }
+    // Không cần override addResourceHandlers nếu chỉ dùng static/images mặc định
 } 
