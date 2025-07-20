@@ -74,8 +74,8 @@ public class AuthViewController {
 
         // Gán thêm user và balance nếu cần
         model.addAttribute("user", currentUser);
-        model.addAttribute("balance", currentUser.getBalance());
-
+//        model.addAttribute("balance", currentUser.getBalance());
+        model.addAttribute("balance", currentUser.getMoney());
         return "dashboard";
     }
 
