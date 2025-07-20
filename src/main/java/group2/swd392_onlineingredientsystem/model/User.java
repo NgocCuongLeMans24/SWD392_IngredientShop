@@ -37,7 +37,7 @@ public class User {
 //    private double balance;
 
     @Column(name = "Money")
-    private double money;
+    private double money = 0;
 
 
     @ManyToOne
