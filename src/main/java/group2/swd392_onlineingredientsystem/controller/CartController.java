@@ -18,6 +18,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/cart")
@@ -94,7 +98,8 @@ public class CartController {
         }
 
         BigDecimal total = cartService.calculateTotal(session);
-        BigDecimal balance = BigDecimal.valueOf(user.get().getBalance());
+//        BigDecimal balance = BigDecimal.valueOf(user.get().getBalance());
+        BigDecimal balance = BigDecimal.valueOf(user.get().getMoney());
 
         if (balance.compareTo(total) < 0) {
             redirectAttributes.addFlashAttribute("error", "Insufficient balance.");
@@ -124,7 +129,8 @@ public class CartController {
 
             // 3. Deduct balance
             BigDecimal newBalance = balance.subtract(total);
-            user.get().setBalance(newBalance.doubleValue());
+//            user.get().setBalance(newBalance.doubleValue());
+            user.get().setMoney(newBalance.doubleValue());
             userRepository.save(user.get());
 
             // 4. Clear cart
