@@ -22,7 +22,8 @@ public class AuthController {
     @PostMapping("/register")
     public String register(@RequestBody User user) {
         try {
-            user.setBalance(100000000);
+            //user.setBalance(100000000);
+            user.setMoney(100000000);
             userService.register(user);
             return "✅ Register successful!";
         } catch (Exception e) {

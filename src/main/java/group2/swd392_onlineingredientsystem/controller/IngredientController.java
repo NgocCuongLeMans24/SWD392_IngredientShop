@@ -18,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,12 +76,10 @@ public class IngredientController {
         Category category = categoryRepository.findById(categoryId).orElse(null);
         ingredient.setCategory(category);
 
-        String uploadDir = "src/main/resources/static/images/";
-
+        String projectDir = System.getProperty("user.dir"); // Thư mục gốc project
+        String uploadDir = projectDir + "/src/main/resources/static/images/";
         File uploadPath = new File(uploadDir);
-        if (!uploadPath.exists()) {
-            uploadPath.mkdirs();
-        }
+        if (!uploadPath.exists()) uploadPath.mkdirs();
         try {
             if (imageFile != null && !imageFile.isEmpty()) {
                 String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
@@ -90,6 +90,7 @@ public class IngredientController {
             ingredientService.save(ingredient);
             redirectAttributes.addFlashAttribute("success", "Tạo nguyên liệu thành công!");
         } catch (IOException e) {
+            e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "Lỗi khi upload ảnh!");
         }
         return "redirect:/ingredients";
@@ -120,12 +121,10 @@ public class IngredientController {
                        RedirectAttributes redirectAttributes) {
         Category category = categoryRepository.findById(categoryId).orElse(null);
         ingredient.setCategory(category);
-        String homeDir = System.getProperty("user.home");
-        String uploadDir = homeDir + "/images/";
+        String projectDir = System.getProperty("user.dir");
+        String uploadDir = projectDir + "/src/main/resources/static/images/";
         File uploadPath = new File(uploadDir);
-        if (!uploadPath.exists()) {
-            uploadPath.mkdirs();
-        }
+        if (!uploadPath.exists()) uploadPath.mkdirs();
         try {
             if (imageFile != null && !imageFile.isEmpty()) {
                 String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();

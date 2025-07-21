@@ -33,9 +33,11 @@ public class User {
     @Column(name = "phoneNumber")
     private String phoneNumber;
 
-    @Column(name = "balance")
-    private double balance;
+//    @Column(name = "balance")
+//    private double balance = 0;
 
+    @Column(name = "Money")
+    private double money = 0;
 
 
     @ManyToOne

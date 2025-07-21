@@ -10,6 +10,7 @@
 </head>
 
 <body class="bg-light">
+<div th:replace="fragments/dynamic-header :: header"></div>
     <div th:if="${message}" class="alert alert-success" role="alert" th:text="${message}"></div>
     <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
 

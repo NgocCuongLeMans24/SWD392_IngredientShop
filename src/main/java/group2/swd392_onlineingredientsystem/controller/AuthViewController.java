@@ -1,7 +1,9 @@
 package group2.swd392_onlineingredientsystem.controller;
 
 import group2.swd392_onlineingredientsystem.model.User;
+import group2.swd392_onlineingredientsystem.security.CustomUserDetails;
 import group2.swd392_onlineingredientsystem.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -62,8 +64,20 @@ public class AuthViewController {
         }
     }
     @GetMapping("/dashboard")
-    public String showDashboard() {
+    public String showDashboard(HttpSession session, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User currentUser = userDetails.getUser();
+
+        // ✅ Gán role vào session để Thymeleaf sử dụng
+        session.setAttribute("role", currentUser.getRole().getRoleName());
+
+        // Gán thêm user và balance nếu cần
+        model.addAttribute("user", currentUser);
+//        model.addAttribute("balance", currentUser.getBalance());
+        model.addAttribute("balance", currentUser.getMoney());
         return "dashboard";
     }
+
 
 }

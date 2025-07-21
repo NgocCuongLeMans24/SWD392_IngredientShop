@@ -230,7 +230,7 @@
         <tr th:each="ingredient : ${ingredientPage.content}">
             <td th:text="${ingredient.name}"></td>
             <td th:if="${ingredient.image != null && !ingredient.image.isEmpty()}">
-                <img th:src="@{'/images/' + ${ingredient.image}}" alt="image" />
+                <img th:src="${ingredient.image}" alt="image" />
             </td>
             <td th:if="${ingredient.image == null || ingredient.image.isEmpty()}">
                 <img th:src="@{/images/flour.jpg}" alt="image" />
